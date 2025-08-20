@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+.btn{
+    display: block;  
+    cursor: pointer;
+    border:none;
+    background-color: #000;
+    color: #fff;
+    padding: 0.5em 1em;
+    transition: 0.3s;
+    border:1px solid #000;
+    text-decoration: none;
+    line-height: normal;
+}
