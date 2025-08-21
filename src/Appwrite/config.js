@@ -1,4 +1,4 @@
-import { Client, Databases, ID } from "appwrite";
+import { Client, Databases, ID,Storage, Query } from "appwrite";
 import conf from '../conf/conf.js'
 
 export class Config{
@@ -7,10 +7,10 @@ export class Config{
      bucket;
 
      constructor(){
-        this.client.setEndpoint('https://<REGION>.cloud.appwrite.io/v1')
-                    .setProject('<PROJECT_ID>');
+        this.client.setEndpoint(conf.appwriteUrl)
+                    .setProject(conf.appwriteProjectId);
         this.databases = new Databases(this.client);
-        this.bucket = new Storage(this.client)
+        this.bucket = new Storage(this.client);
     }
 
     async createPin({title,description,creatorId,status,coverFileId}){

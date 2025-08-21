@@ -1,31 +1,35 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import authServices from '../Appwrite/config'
-import authServices2 from '../Appwrite/auth'
+import configServices from '../Appwrite/config'
+import authServices from '../Appwrite/auth'
+
+
 
 function AddPost() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    tags: '',
     image: null
   })
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    let fileId=null;
     if(formData.image){
-      const uploaded = authServices.uploadFile(formData.image)
-      coverFileId = uploaded.$id
+      const uploaded = configServices.uploadFile(formData.image)
+      fileId = uploaded.$id
     }
-    const currentUser = authServices2.getCurrentUser()
+    const currentUser = authServices.getCurrentUser()
 
-    authServices.createPin({title:formData.title,
+    configServices.createPin({title:formData.title,
       description:formData.content,
       creatorId:currentUser.$id,
       status:"active",
-      coverFileId:coverFileId
+      coverFileId: fileId
     })
+    navigate("/");
+
   }
 
   return (
@@ -63,18 +67,7 @@ function AddPost() {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Tags
-            </label>
-            <input
-              type="text"
-              value={formData.tags}
-              onChange={(e) => setFormData({...formData, tags: e.target.value})}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
-              placeholder="Enter tags (comma separated)"
-            />
-          </div>
+          
 
           <div>
             <label className="block text-sm font-medium text-gray-700">
