@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import authServices from '../Appwrite/config'
+import authServices2 from '../Appwrite/auth'
 
 function AddPost() {
   const navigate = useNavigate()
@@ -12,7 +14,18 @@ function AddPost() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Add your post submission logic here
+    if(formData.image){
+      const uploaded = authServices.uploadFile(formData.image)
+      coverFileId = uploaded.$id
+    }
+    const currentUser = authServices2.getCurrentUser()
+
+    authServices.createPin({title:formData.title,
+      description:formData.content,
+      creatorId:currentUser.$id,
+      status:"active",
+      coverFileId:coverFileId
+    })
   }
 
   return (

@@ -109,6 +109,10 @@ export class Config{
     }
 }
 
+const crudServices=new Config()
+
+export default crudServices;
+
 
     
 
