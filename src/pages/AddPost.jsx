@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import configServices from '../Appwrite/config'
 import authServices from '../Appwrite/auth'
 
-
-
 function AddPost() {
+  const [loading,setLoading]=useState(false);
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     title: '',
@@ -13,23 +12,33 @@ function AddPost() {
     image: null
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    let fileId=null;
-    if(formData.image){
-      const uploaded = configServices.uploadFile(formData.image)
-      fileId = uploaded.$id
+    setLoading(true);
+    try {
+      let fileId = null
+      if (formData.image) {
+        const uploaded = await configServices.uploadFile(formData.image)
+        fileId = uploaded.$id
+      }
+
+      const user = await authServices.getCurrentUser()
+
+      const post = await configServices.createPin({
+        title: formData.title,
+        description: formData.content,
+        creatorId: user.$id,
+        status: "active",
+        coverFileId: fileId
+      })
+
+      navigate("/")
+    } catch (err) {
+      console.error("Error creating post:", err)
     }
-    const currentUser = authServices.getCurrentUser()
-
-    configServices.createPin({title:formData.title,
-      description:formData.content,
-      creatorId:currentUser.$id,
-      status:"active",
-      coverFileId: fileId
-    })
-    navigate("/");
-
+    finally{
+      setLoading(false)
+    }
   }
 
   return (
@@ -46,7 +55,9 @@ function AddPost() {
             <input
               type="text"
               value={formData.title}
-              onChange={(e) => setFormData({...formData, title: e.target.value})}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
               placeholder="Enter post title"
               required
@@ -59,7 +70,9 @@ function AddPost() {
             </label>
             <textarea
               value={formData.content}
-              onChange={(e) => setFormData({...formData, content: e.target.value})}
+              onChange={(e) =>
+                setFormData({ ...formData, content: e.target.value })
+              }
               rows={6}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
               placeholder="Write your post content..."
@@ -67,15 +80,15 @@ function AddPost() {
             />
           </div>
 
-          
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Image
             </label>
             <input
               type="file"
-              onChange={(e) => setFormData({...formData, image: e.target.files[0]})}
+              onChange={(e) =>
+                setFormData({ ...formData, image: e.target.files[0] })
+              }
               className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               accept="image/*"
             />
@@ -91,9 +104,10 @@ function AddPost() {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className={`px-4 py-2 rounded-md text-sm font-medium text-white ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+              disabled= {loading}
             >
-              Create Post
+              {loading ? "Creating..":"Create Post"}
             </button>
           </div>
         </form>

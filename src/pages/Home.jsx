@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import configServices from '../Appwrite/config.js'
-
+import authService from '../Appwrite/auth.js';
 function Home() {
 
   const [posts,setPosts]=useState([]);
   const [loading,setLoading]=useState(true);
+  const [user,setUser]=useState("");
+
+  
 
   useEffect(()=>{
     try {
       configServices.getPosts().then((post)=>{
       if(post && post.documents )
         setPosts(post.documents)
+    })
+      authService.getCurrentUser().then((res)=>{
+      setUser(res)
     })
     }
 
@@ -49,11 +55,13 @@ function Home() {
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-sm text-gray-500">date</span>
-                      <span className="text-sm text-gray-500">{post.creatorId}</span>
+                      <span className="text-sm text-gray-500">{post.$id}</span>
                     </div>
                     <h2 className="text-xl font-semibold text-gray-900 mb-2">
                       {post.title}
                     </h2>
+                    { user?.$id === post.cretorId }
+                    
                     <p className="text-gray-600 mb-4">
                       {post.description}
                     </p>
