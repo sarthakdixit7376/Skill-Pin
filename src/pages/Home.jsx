@@ -50,7 +50,7 @@ function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {posts.length > 0 ? (
-                posts.map((post) => <PostCard key={post.$id} post={post} />)
+                posts.map((post) => <PostCard key={post.$id} post={post} user={user} />)
               ) : (
                 <p className="text-gray-500 text-center col-span-full">
                   No posts available. Be the first to share your skill!

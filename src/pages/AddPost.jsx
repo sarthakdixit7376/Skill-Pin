@@ -29,7 +29,8 @@ function AddPost() {
         description: formData.content,
         creatorId: user.$id,
         status: "active",
-        coverFileId: fileId
+        coverFileId: fileId,
+        creatorName:user.name
       })
 
       navigate("/")
