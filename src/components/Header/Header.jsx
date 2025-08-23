@@ -38,12 +38,7 @@ function Header() {
       active: !authStatus,
       icon: '✍️'
     },
-    {
-      name: 'All Posts',
-      slug: '/all-pin',
-      active: authStatus,
-      icon: '📌'
-    },
+    
     {
       name: 'Add Post',
       slug: '/add-pin',
