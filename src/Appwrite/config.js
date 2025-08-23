@@ -108,6 +108,10 @@ export class Config{
             fileId
         )
     }
+    getFileView(fileId) {
+    return this.bucket.getFileView(conf.appwriteBucketId, fileId);
+    }
+
 }
 
 const crudServices=new Config()
