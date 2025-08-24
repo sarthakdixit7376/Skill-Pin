@@ -1,9 +1,17 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Link } from 'react-router-dom'
 import configServices from '../Appwrite/config'
 
 
 function PostCard({ post, user }) {
+  const [like,setLike]=useState(0);
+  const [liked,setLiked]=useState(false);
+
+  const handleLike = ()=>{
+    setLike(like+1);
+
+  }
+
   const handleDelete = async () => {
     try {
       await configServices.deleteDocument(post.$id)
@@ -14,7 +22,7 @@ function PostCard({ post, user }) {
     }
 
   }
-  console.log(configServices.getFilePreview(post.coverFileId))
+  
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
@@ -39,6 +47,8 @@ function PostCard({ post, user }) {
         >
           Steps →
         </Link>
+        <button className='flex flex-row justify-items-start bg-amber-600 hover:bg-amber-800 text-white rounded-xl p-2 mt-2'
+         onClick={handleLike}>{`${like} Like`}</button>
         {user && user.$id === post.creatorId && (<div className='flex flex-row justify-end' >
           <button className='bg-red-600 text-white px-2 py-1 hover:bg-red-800 rounded-xl m-1' onClick={handleDelete}>Delete</button>
           <button className='bg-gray-600 text-white px-2 py-1 hover:bg-gray-800 rounded-xl m-1'>Edit</button>

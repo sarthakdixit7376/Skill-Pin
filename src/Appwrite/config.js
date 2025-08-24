@@ -13,7 +13,7 @@ export class Config{
         this.bucket = new Storage(this.client);
     }
 
-    async createPin({title,description,creatorId,status,coverFileId,creatorName}){
+    async createPin({title,description,creatorId,status,coverFileId,creatorName,likes}){
         try {
            const newDoc= await this.databases.createDocument(
                 conf.appwriteDatabaseId,
@@ -26,6 +26,7 @@ export class Config{
                 status,
                 coverFileId ,
                 creatorName,
+                likes,
                 });
         return newDoc;
         } catch (error) {

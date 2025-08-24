@@ -30,7 +30,8 @@ function AddPost() {
         creatorId: user.$id,
         status: "active",
         coverFileId: fileId,
-        creatorName:user.name
+        creatorName:user.name,
+        likes:"0",
       })
 
       navigate("/")
